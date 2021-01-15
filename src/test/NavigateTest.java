@@ -1,0 +1,94 @@
+// **********************************************************
+// Assignment2:
+// Student1:
+// UTORID user_name: bryanch3
+// UT Student #: 1004015683
+// Author: Chanzo Bryan
+//
+// Student2:
+// UTORID user_name: gaylejoe
+// UT Student #: 1004029268
+// Author: Joey Lakerdas-Gayle
+//
+// Student3:
+// UTORID user_name: appleb16
+// UT Student #: 1004432205
+// Author: Sean Applebaum
+//
+// Student4:
+// UTORID user_name: ngevan1
+// UT Student #:1004166662
+// Author: Evan Kar Long Ng
+//
+//
+// Honor Code: I pledge that this program represents my own
+// program code and that I have coded on my own. I received
+// help from no one in designing and debugging my program.
+// I have also read the plagiarism section in the course info
+// sheet of CSC B07 and understand the consequences.
+// *********************************************************
+package test;
+
+import static org.junit.Assert.assertEquals;
+
+import driver.JShell;
+import exception.IllegalNameException;
+import exception.InvalidPathException;
+import org.junit.Test;
+import shell.Directory;
+import shell.File;
+import shell.Navigate;
+
+public class NavigateTest {
+
+  @Test
+  public void test01FindDirectoryAbsoluteTest()
+      throws IllegalNameException, InvalidPathException {
+    JShell shell = new JShell();
+    Directory root = shell.getState().getRoot();
+    Directory dir2 = root.addChild("folder_1/").addChild("folder_2/");
+    assertEquals(dir2, Navigate.navigateToDirectory(shell.getState(),
+        "/folder_1/folder_2/"));
+  }
+
+  @Test
+  public void test02FindDirectoryRelativeTest()
+      throws IllegalNameException, InvalidPathException {
+    JShell shell = new JShell();
+    Directory root = shell.getState().getRoot();
+    Directory dir1 = root.addChild("folder_1/");
+    Directory dir2 = dir1.addChild("folder_2/");
+    shell.getState().setWorkingDirectory(dir1);
+    assertEquals(dir2, Navigate.navigateToDirectory(shell.getState(),
+        "folder_2"));
+  }
+
+  @Test
+  public void test03FindFileAbsoluteTest()
+      throws IllegalNameException, InvalidPathException {
+    JShell shell = new JShell();
+    Directory root = shell.getState().getRoot();
+    File file = root.addChild("folder_1/").addFile("file");
+    assertEquals(file, Navigate.navigateToFile(shell.getState(),
+        "/folder_1/file"));
+  }
+
+  @Test
+  public void test04FindFileRelativeTest()
+      throws IllegalNameException, InvalidPathException {
+    JShell shell = new JShell();
+    Directory root = shell.getState().getRoot();
+    Directory dir1 = root.addChild("folder_1/");
+    File file = dir1.addFile("file");
+    shell.getState().setWorkingDirectory(dir1);
+    assertEquals(file, Navigate.navigateToFile(shell.getState(), "file"));
+  }
+
+  @Test
+  public void test05SplitPathTest() {
+    String[] splitPath = Navigate.splitPath("folder_1/folder_2/file");
+    assertEquals("folder_1/", splitPath[0]);
+    assertEquals("folder_2/", splitPath[1]);
+    assertEquals("file", splitPath[2]);
+  }
+}
